@@ -29,6 +29,13 @@ function handleCors(response) {
   return response;
 }
 
+// 辅助函数：提取纯净的API名称，去除可能的查询参数
+function getCleanApiName(input) {
+  if (!input) return null;
+  // 分割查询参数，只保留路径部分
+  return input.split('?')[0];
+}
+
 // 主处理函数
 module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') {
@@ -36,20 +43,20 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // 多种方式获取API名称，提高兼容性
     let apiName;
     
-    // 方式1: 从Vercel的路径参数获取
+    // 方式1: 从Vercel的路径参数获取并清理
     if (req.query.path && Array.isArray(req.query.path) && req.query.path.length > 0) {
-      apiName = req.query.path[0];
+      apiName = getCleanApiName(req.query.path[0]);
     } 
     // 方式2: 从请求URL直接解析
     else if (req.url) {
-      const pathParts = req.url.split('/').filter(part => part);
-      // 寻找api之后的路径部分
+      // 分割URL，只取路径部分（去除查询参数）
+      const pathOnly = req.url.split('?')[0];
+      const pathParts = pathOnly.split('/').filter(part => part);
+      
       const apiIndex = pathParts.indexOf('api');
       if (apiIndex !== -1 && pathParts.length > apiIndex + 1) {
-        // 确保找到proxy后的部分
         const proxyIndex = pathParts.indexOf('proxy', apiIndex);
         if (proxyIndex !== -1 && pathParts.length > proxyIndex + 1) {
           apiName = pathParts[proxyIndex + 1];
@@ -57,10 +64,10 @@ module.exports = async (req, res) => {
       }
     }
 
-    // 详细日志，帮助调试
-    console.log('解析到的API名称:', apiName);
+    // 详细日志
+    console.log('原始路径参数:', req.query.path);
+    console.log('清理后的API名称:', apiName);
     console.log('请求URL:', req.url);
-    console.log('路径参数:', req.query.path);
     
     // 验证API名称
     if (!apiName || !API_CONFIG[apiName]) {
@@ -69,7 +76,8 @@ module.exports = async (req, res) => {
         .json({ 
           error: `API not found: ${apiName}`,
           availableApis: Object.keys(API_CONFIG),
-          requestUrl: req.url
+          requestUrl: req.url,
+          cleanedApiName: apiName
         });
     }
 
