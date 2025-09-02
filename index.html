@@ -207,16 +207,6 @@
 
     <!-- 音频测试区域-->
     <div id="audioTestArea" class="container mx-auto px-4 mt-4 hidden">
-<!--        <div class="bg-dark-card rounded-xl p-4 border border-gray-700/50">-->
-<!--            <p class="text-sm text-gray-400 mb-2">音频播放状态</p>-->
-<!--            <div class="audio-visualizer" id="audioVisualizer">-->
-<!--                <div class="audio-visualizer-bar" style="height: 30%; margin-right: 1px;"></div>-->
-<!--                <div class="audio-visualizer-bar" style="height: 70%; margin-right: 1px;"></div>-->
-<!--                <div class="audio-visualizer-bar" style="height: 50%; margin-right: 1px;"></div>-->
-<!--                <div class="audio-visualizer-bar" style="height: 90%; margin-right: 1px;"></div>-->
-<!--                <div class="audio-visualizer-bar" style="height: 60%;"></div>-->
-<!--            </div>-->
-<!--        </div>-->
     </div>
 
     <!-- 回报率高的提示 -->
@@ -582,14 +572,12 @@
             // 表格相关变量
             let tableExpanded = false; // 表格展开状态
 
-            // 配置Python代理服务器地址
-            const proxyServer = 'http://localhost:5000'; // 本地Python代理服务地址
-
-            // API地址（通过代理访问）
-            const api1Url = `${proxyServer}/proxy/runes`;
-            const api2Url = `${proxyServer}/proxy/fees`;
-            const api3Url = `${proxyServer}/proxy/prices`;
-            const api4Url = `${proxyServer}/proxy/market`;
+            // 配置Vercel代理路径（替换原来的Python本地代理）
+            // 注意：不需要指定完整URL，Vercel会自动处理相对路径
+            const api1Url = '/api/proxy/runes';
+            const api2Url = '/api/proxy/fees';
+            const api3Url = '/api/proxy/prices';
+            const api4Url = '/api/proxy/market';
 
             // 获取音频元素和按钮元素
             const alertSound = document.getElementById('alertSound');
@@ -978,9 +966,6 @@
             // 初始化应用
             function initApp() {
                 console.log('初始化应用');
-                // 检查代理服务器是否可用
-                checkProxyServer();
-
                 // 获取数据
                 fetchAndProcessData();
 
@@ -1149,19 +1134,6 @@
                 });
             }
 
-            // 检查代理服务器是否可用
-            async function checkProxyServer() {
-                try {
-                    const response = await fetchWithTimeout(`${proxyServer}/proxy/runes`, {}, 5000);
-                    if (!response.ok) {
-                        throw new Error(`代理服务器返回错误状态: ${response.status}`);
-                    }
-                } catch (error) {
-                    showError(`Python代理服务器未运行或不可达: ${error.message}\n请确保已启动代理服务器`);
-                    console.error('代理服务器检查失败:', error);
-                }
-            }
-
             // 显示加载状态
             function showLoading() {
                 document.getElementById('loading').classList.remove('hidden');
@@ -1208,7 +1180,7 @@
                     updateLoadingProgress('正在从代理服务器获取数据...');
 
                     try {
-                        // 尝试通过代理获取所有API数据
+                        // 尝试通过Vercel代理获取所有API数据
                         const [api1Data, api2Data, api3Data, api4Data] = await Promise.all([
                             fetchApiData(api1Url),
                             fetchApiData(api2Url),
@@ -1250,14 +1222,13 @@
                         console.error(`获取数据失败:`, error);
 
                         // 提供更详细的错误原因和解决方案
-                        let detailedMessage = "通过代理获取数据失败，可能的原因：\n";
-                        detailedMessage += "- Python代理服务器未运行\n";
-                        detailedMessage += "- 代理服务器配置错误\n";
+                        let detailedMessage = "通过Vercel代理获取数据失败，可能的原因：\n";
+                        detailedMessage += "- 代理配置错误\n";
                         detailedMessage += "- 源API服务器暂时不可用\n\n";
                         detailedMessage += "请尝试：\n";
-                        detailedMessage += "- 检查Python代理服务器是否正在运行\n";
-                        detailedMessage += "- 重启代理服务器\n";
-                        detailedMessage += "- 检查代理服务器日志";
+                        detailedMessage += "- 检查Vercel部署是否成功\n";
+                        detailedMessage += "- 检查API代理配置\n";
+                        detailedMessage += "- 查看Vercel部署日志";
 
                         throw new Error(detailedMessage);
                     }
