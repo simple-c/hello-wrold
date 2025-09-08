@@ -427,10 +427,8 @@
                                     <span id="quantityDisplay" class="calc-value">25</span>
                                     <span class="calc-operator">/</span>
                                     <span id="distributionDenominator" class="calc-value">--</span>
-                                    <span class="calc-operator">×</span>
-                                    <span class="calc-value">100%</span>
                                     <span class="calc-operator">=</span>
-                                    <span id="distributionRatio" class="calc-result min-w-[80px] text-right">-- %</span>
+                                    <span id="distributionRatio" class="calc-result min-w-[80px] text-right">--</span>
                                 </div>
                             </div>
 
@@ -1508,10 +1506,10 @@
                 }
 
                 // 分配比例: mint数量/(fee字段大于等于阈值的数据条数 + mint数量)
-                const distributionRatio = mintAmount / (qualifiedCount + mintAmount) * 100;
+                const distributionRatio = mintAmount / (qualifiedCount + mintAmount);
 
                 // 获得柴油数量: 分配比例*3.125
-                const dieselAmount = distributionRatio / 100 * 3.125;
+                const dieselAmount = distributionRatio * 3.125;
 
                 // 获得柴油价值: 获得柴油数量*柴油价格/100000000 * USD数值
                 const chaiyouValue = usdValue ? (dieselAmount * chaiyouPrice / 100000000 * usdValue) : null;
@@ -1666,6 +1664,7 @@
     </script>
 </body>
 </html>
+
 
 
 
