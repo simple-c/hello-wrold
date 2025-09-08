@@ -427,6 +427,8 @@
                                     <span id="quantityDisplay" class="calc-value">25</span>
                                     <span class="calc-operator">/</span>
                                     <span id="distributionDenominator" class="calc-value">--</span>
+                                    <span class="calc-operator">×</span>
+                                    <span class="calc-value">100%</span>
                                     <span class="calc-operator">=</span>
                                     <span id="distributionRatio" class="calc-result min-w-[80px] text-right">--</span>
                                 </div>
@@ -1506,7 +1508,7 @@
                 }
 
                 // 分配比例: mint数量/(fee字段大于等于阈值的数据条数 + mint数量)
-                const distributionRatio = mintAmount / (qualifiedCount + mintAmount);
+                const distributionRatio = mintAmount / (qualifiedCount + mintAmount) * 100;
 
                 // 获得柴油数量: 分配比例*3.125
                 const dieselAmount = distributionRatio * 3.125;
@@ -1664,6 +1666,7 @@
     </script>
 </body>
 </html>
+
 
 
 
