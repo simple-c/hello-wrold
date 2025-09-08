@@ -430,7 +430,7 @@
                                     <span class="calc-operator">×</span>
                                     <span class="calc-value">100%</span>
                                     <span class="calc-operator">=</span>
-                                    <span id="distributionRatio" class="calc-result min-w-[80px] text-right">--</span>
+                                    <span id="distributionRatio" class="calc-result min-w-[80px] text-right">-- %</span>
                                 </div>
                             </div>
 
@@ -1511,7 +1511,7 @@
                 const distributionRatio = mintAmount / (qualifiedCount + mintAmount) * 100;
 
                 // 获得柴油数量: 分配比例*3.125
-                const dieselAmount = distributionRatio * 3.125;
+                const dieselAmount = distributionRatio / 100 * 3.125;
 
                 // 获得柴油价值: 获得柴油数量*柴油价格/100000000 * USD数值
                 const chaiyouValue = usdValue ? (dieselAmount * chaiyouPrice / 100000000 * usdValue) : null;
@@ -1666,6 +1666,7 @@
     </script>
 </body>
 </html>
+
 
 
 
