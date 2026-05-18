@@ -4,7 +4,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 // 配置要代理的API
 const API_CONFIG = {
   'runes': {
-    url: 'http://74.82.199.248:8002/api/runes/2:0?limit=5000',
+    url: 'http://103.6.234.92:8002/api/runes/2:0?limit=5000',
     methods: ['GET']
   },
   'fees': {
